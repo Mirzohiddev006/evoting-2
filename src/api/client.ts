@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { TokenResponse } from '@/types'
 
-const DEFAULT_API_BASE = 'https://e-voting-system-rubj.onrender.com/api'
+const DEFAULT_API_BASE = 'https://e-voting-system2.onrender.com/api'
 
 function normalizeApiBaseUrl(url: string) {
   const cleanUrl = url.replace(/\/+$/, '')
