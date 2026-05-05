@@ -11,12 +11,12 @@ import { getErrorMessage } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
 const schema = z.object({
-  name: z.string().min(2, "Ism kamida 2 ta belgidan iborat bo'lishi kerak"),
-  email: z.string().email("Email manzil noto'g'ri"),
-  password: z.string().min(6, 'Kamida 6 ta belgi kerak'),
+  name: z.string().min(2, "Имя должно состоять минимум из 2 символов"),
+  email: z.string().email("Неверный адрес электронной почты"),
+  password: z.string().min(6, 'Пароль должен состоять минимум из 6 символов'),
   confirmPassword: z.string(),
 }).refine(d => d.password === d.confirmPassword, {
-  message: 'Parollar mos kelmadi',
+  message: 'Пароли не совпадают',
   path: ['confirmPassword'],
 })
 type FormData = z.infer<typeof schema>
@@ -48,14 +48,13 @@ export default function RegisterPage() {
         name: data.name,
         password: data.password,
       })
-      // getMe so'rovi ishlashi uchun tokenlarni saqlaymiz.
       useAuthStore.getState().setTokens(tokens.access_token, tokens.refresh_token)
       const user = await authApi.getMe()
       setAuth(user, tokens.access_token, tokens.refresh_token)
-      toast.success('Hisob muvaffaqiyatli yaratildi!')
+      toast.success('Аккаунт успешно создан!')
       navigate('/dashboard')
     } catch (err: unknown) {
-      toast.error(getErrorMessage(err, "Ro'yxatdan o'tish amalga oshmadi"))
+      toast.error(getErrorMessage(err, "Ошибка при регистрации"))
       useAuthStore.getState().logout()
     } finally {
       setLoading(false)
@@ -63,142 +62,125 @@ export default function RegisterPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: 'var(--background)' }}
-    >
-      {/* Ambient glow */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full"
-          style={{
-            background: 'radial-gradient(ellipse, var(--primary)/8% 0%, transparent 70%)',
-            filter: 'blur(40px)',
-          }}
-        />
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      {/* Background ambient glow - modern look */}
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-[-10%] md:top-[-20%] left-[-10%] md:left-[20%] w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-primary/10 blur-[80px] md:blur-[120px] dark:bg-primary/20" />
+        <div className="absolute bottom-[-10%] md:bottom-[-20%] right-[-10%] md:right-[20%] w-[300px] md:w-[600px] h-[300px] md:h-[600px] rounded-full bg-ring/10 blur-[80px] md:blur-[120px]" />
       </div>
 
-      <div className="relative w-full max-w-[400px] animate-fade-in-up">
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-7">
-          <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
-            style={{ background: 'var(--primary)' }}
-          >
-            <Vote className="w-6 h-6" style={{ color: 'var(--primary-foreground)' }} />
+      <div className="relative z-10 w-full max-w-[440px] animate-fade-in-up mt-8">
+        {/* Logo and Typography */}
+        <div className="flex flex-col items-center mb-8 text-center space-y-3">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl bg-linear-to-br from-primary to-primary/80 border border-primary/20">
+            <Vote className="w-8 h-8 text-primary-foreground" />
           </div>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--foreground)' }}>
-            Hisob yaratish
-          </h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-            So'rovnomalarda qatnashish uchun EVote'ga qo'shiling
-          </p>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">Создать аккаунт</h1>
+            <p className="text-sm md:text-base text-muted-foreground mt-2">
+              Присоединяйтесь к EVote для участия в опросах
+            </p>
+          </div>
         </div>
 
-        <Card>
-          <CardContent className="p-6">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-              <Input
-                label="To'liq ism"
-                placeholder="Ali Valiyev"
-                autoComplete="name"
-                leftIcon={<User className="w-4 h-4" />}
-                error={errors.name?.message}
-                {...register('name')}
-              />
-              <Input
-                label="Email"
-                type="email"
-                placeholder="siz@example.com"
-                autoComplete="email"
-                leftIcon={<Mail className="w-4 h-4" />}
-                error={errors.email?.message}
-                {...register('email')}
-              />
+        <Card className="backdrop-blur-xl bg-card/80 shadow-2xl border-border/50">
+          <CardContent className="p-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+              <div className="space-y-4">
+                <Input
+                  label="Полное имя"
+                  placeholder="Иван Иванов"
+                  autoComplete="name"
+                  leftIcon={<User className="w-4 h-4 text-muted-foreground" />}
+                  error={errors.name?.message}
+                  {...register('name')}
+                />
+                <Input
+                  label="Электронная почта"
+                  type="email"
+                  placeholder="name@example.com"
+                  autoComplete="email"
+                  leftIcon={<Mail className="w-4 h-4 text-muted-foreground" />}
+                  error={errors.email?.message}
+                  {...register('email')}
+                />
 
-              {/* Parol kuchi */}
-              <div>
-                <div className="relative">
-                  <Input
-                    label="Parol"
-                    type={showPw ? 'text' : 'password'}
-                    placeholder="********"
-                    autoComplete="new-password"
-                    leftIcon={<Lock className="w-4 h-4" />}
-                    error={errors.password?.message}
-                    {...register('password')}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPw(v => !v)}
-                    aria-label={showPw ? 'Parolni yashirish' : "Parolni ko'rsatish"}
-                    className="absolute right-3 transition-colors"
-                    style={{
-                      top: errors.password ? '32px' : '31px',
-                      color: 'var(--muted-foreground)',
-                    }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--foreground)' }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--muted-foreground)' }}
-                  >
-                    {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                {/* Password & Strength */}
+                <div>
+                  <div className="relative">
+                    <Input
+                      label="Пароль"
+                      type={showPw ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      autoComplete="new-password"
+                      leftIcon={<Lock className="w-4 h-4 text-muted-foreground" />}
+                      error={errors.password?.message}
+                      {...register('password')}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPw(v => !v)}
+                      className="absolute right-3 top-[34px] p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors"
+                    >
+                      {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+
+                  {strength && (
+                    <div className="flex items-center gap-2 mt-3 pl-1">
+                      <div className="flex gap-1.5 flex-1">
+                        {(['weak', 'medium', 'strong'] as const).map((level, i) => (
+                          <div
+                            key={level}
+                            className="h-1.5 flex-1 rounded-full transition-all duration-500 ease-out"
+                            style={{
+                              background:
+                                (strength === 'strong') ||
+                                (strength === 'medium' && i < 2) ||
+                                (strength === 'weak' && i === 0)
+                                  ? STRENGTH_COLORS[strength]
+                                  : 'var(--border)',
+                              opacity: (strength === 'strong') || (strength === 'medium' && i < 2) || (strength === 'weak' && i === 0) ? 1 : 0.4
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <span
+                        className="text-[11px] font-semibold w-16 text-right"
+                        style={{ color: STRENGTH_COLORS[strength] }}
+                      >
+                        {{ weak: 'Слабый', medium: "Средний", strong: 'Надежный' }[strength]}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Strength meter */}
-                {strength && (
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="flex gap-1 flex-1">
-                      {(['weak', 'medium', 'strong'] as const).map((level, i) => (
-                        <div
-                          key={level}
-                          className="h-1 flex-1 rounded-full transition-all duration-300"
-                          style={{
-                            background:
-                              (strength === 'strong') ||
-                              (strength === 'medium' && i < 2) ||
-                              (strength === 'weak' && i === 0)
-                                ? STRENGTH_COLORS[strength]
-                                : 'var(--border)',
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <span
-                      className="text-xs font-semibold w-14"
-                      style={{ color: STRENGTH_COLORS[strength] }}
-                    >
-                      {{ weak: 'Zaif', medium: "O'rtacha", strong: 'Kuchli' }[strength]}
-                    </span>
-                  </div>
-                )}
+                <Input
+                  label="Подтвердите пароль"
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  leftIcon={<Lock className="w-4 h-4 text-muted-foreground" />}
+                  error={errors.confirmPassword?.message}
+                  {...register('confirmPassword')}
+                />
               </div>
 
-              <Input
-                label="Parolni tasdiqlang"
-                type="password"
-                placeholder="********"
-                autoComplete="new-password"
-                leftIcon={<Lock className="w-4 h-4" />}
-                error={errors.confirmPassword?.message}
-                {...register('confirmPassword')}
-              />
-
-              <Button type="submit" className="w-full gap-2" size="lg" loading={loading}>
-                Hisob yaratish
-                {!loading && <ArrowRight className="w-4 h-4" />}
+              <Button type="submit" className="w-full mt-4 h-11 text-base font-medium transition-transform active:scale-[0.98]" loading={loading}>
+                {!loading && 'Создать аккаунт'}
+                {!loading && <ArrowRight className="w-4 h-4 ml-2" />}
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <p className="text-center text-sm mt-5" style={{ color: 'var(--muted-foreground)' }}>
-          Hisobingiz bormi?{' '}
+        <p className="text-center text-sm mt-8 mb-4 text-muted-foreground">
+          Уже есть аккаунт?{' '}
           <Link
             to="/login"
-            className="font-semibold transition-colors"
-            style={{ color: 'var(--primary)' }}
+            className="font-semibold text-primary hover:text-primary/80 hover:underline underline-offset-4 transition-colors"
           >
-            Kirish
+            Войти
           </Link>
         </p>
       </div>
