@@ -87,12 +87,13 @@ export default function App() {
         toastOptions={{
           duration: 3500,
           style: {
-            background: 'hsl(var(--card))',
-            color: 'hsl(var(--foreground))',
-            border: '1px solid hsl(var(--border))',
-            borderRadius: '12px',
+            background: 'var(--card)',
+            color: 'var(--foreground)',
+            border: '1px solid var(--border)',
+            borderRadius: '14px',
             fontSize: '14px',
             fontWeight: '500',
+            boxShadow: '0 8px 24px hsl(252 82% 62% / 0.12)',
           },
         }}
       />
