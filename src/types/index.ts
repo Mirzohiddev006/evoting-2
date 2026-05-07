@@ -74,6 +74,7 @@ export interface UpdatePollPayload {
   description?: string | null
   start_date?: string | null
   end_date?: string | null
+  status?: PollStatus | string | null
 }
 
 export interface VoteCreate {

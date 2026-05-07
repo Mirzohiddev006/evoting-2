@@ -8,9 +8,15 @@ import type {
   OptionCreatePayload,
   User,
   UserRoleUpdate,
+  SystemStats,
 } from '@/types'
 
 export const adminApi = {
+  async getSystemStats(): Promise<SystemStats> {
+    const { data } = await apiClient.get<SystemStats>('/stats')
+    return data
+  },
+
   async getPolls(): Promise<PollWithOptions[]> {
     const { data } = await apiClient.get<PollWithOptions[]>('/admin/polls')
     return data

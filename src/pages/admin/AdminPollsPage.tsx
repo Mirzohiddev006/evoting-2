@@ -237,7 +237,7 @@ export default function AdminPollsPage() {
 
       {/* Delete Modal */}
       <Modal
-        isOpen={deleteTarget !== null}
+        open={deleteTarget !== null}
         onClose={() => !deleting && setDeleteTarget(null)}
         title="Удалить опрос"
         description="Вы уверены, что хотите удалить этот опрос? Все связанные с ним данные и результаты голосований будут удалены безвозвратно."

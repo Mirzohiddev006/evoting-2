@@ -213,7 +213,7 @@ export default function AdminUsersPage() {
 
       {/* Delete Modal */}
       <Modal
-        isOpen={deleteTarget !== null}
+        open={deleteTarget !== null}
         onClose={() => !deleting && setDeleteTarget(null)}
         title="Удалить пользователя"
         description="Вы уверены, что хотите удалить этого пользователя? Это действие необратимо."

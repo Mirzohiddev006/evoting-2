@@ -243,14 +243,15 @@ export const Spinner = ({ className }: { className?: string }) => (
 
 // ─── Empty State ─────────────────────────────────────────────────
 export const EmptyState = ({
-  icon, title, description, action,
+  icon, title, description, action, className,
 }: {
   icon?: React.ReactNode
   title: string
   description?: string
   action?: React.ReactNode
+  className?: string
 }) => (
-  <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
+  <div className={cn("flex flex-col items-center justify-center py-20 text-center gap-4", className)}>
     {icon && (
       <div className="text-[var(--muted-foreground)] opacity-30">{icon}</div>
     )}
