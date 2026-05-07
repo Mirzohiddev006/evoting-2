@@ -12,12 +12,12 @@ import { getErrorMessage } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
 const schema = z.object({
-  title:       z.string().min(5, 'Kamida 5 ta belgi kerak'),
-  description: z.string().min(10, 'Kamida 10 ta belgi kerak'),
-  startDate:   z.string().min(1, 'Majburiy maydon'),
-  endDate:     z.string().min(1, 'Majburiy maydon'),
+  title:       z.string().min(5, 'Минимум 5 символов'),
+  description: z.string().min(10, 'Минимум 10 символов'),
+  startDate:   z.string().min(1, 'Обязательное поле'),
+  endDate:     z.string().min(1, 'Обязательное поле'),
 }).refine(d => new Date(d.endDate) > new Date(d.startDate), {
-  message: 'Tugash sanasi boshlanish sanasidan keyin bo\'lishi kerak',
+  message: 'Дата окончания должна быть позже даты начала',
   path: ['endDate'],
 })
 type FormData = z.infer<typeof schema>
@@ -65,11 +65,11 @@ export default function PollFormPage() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['adminPolls'] })
       qc.invalidateQueries({ queryKey: ['polls'] })
-      toast.success("So'rovnoma yaratildi!")
+      toast.success("Опрос создан!")
       navigate('/admin/polls')
     },
     onError: (e: unknown) => {
-      toast.error(getErrorMessage(e, "So'rovnomani yaratib bo'lmadi"))
+      toast.error(getErrorMessage(e, "Не удалось создать опрос"))
     },
   })
 
@@ -86,11 +86,11 @@ export default function PollFormPage() {
       qc.invalidateQueries({ queryKey: ['adminPolls'] })
       qc.invalidateQueries({ queryKey: ['polls'] })
       qc.invalidateQueries({ queryKey: ['poll', pollId] })
-      toast.success("So'rovnoma yangilandi!")
+      toast.success("Опрос обновлен!")
       navigate('/admin/polls')
     },
     onError: (e: unknown) => {
-      toast.error(getErrorMessage(e, "So'rovnomani yangilab bo'lmadi"))
+      toast.error(getErrorMessage(e, "Не удалось обновить опрос"))
     },
   })
 
@@ -121,45 +121,45 @@ export default function PollFormPage() {
         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--muted-foreground)' }}
       >
         <ArrowLeft className="w-4 h-4" />
-        So'rovnomalarga qaytish
+        Вернуться к опросам
       </button>
 
       <h1
         className="text-xl font-bold mb-6 animate-fade-in-up"
         style={{ color: 'var(--foreground)' }}
       >
-        {isEdit ? "So'rovnomani tahrirlash" : "Yangi so'rovnoma yaratish"}
+        {isEdit ? "Редактировать опрос" : "Создать новый опрос"}
       </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         {/* Poll details */}
         <Card className="animate-fade-in-up">
           <CardHeader>
-            <CardTitle>So'rovnoma tafsilotlari</CardTitle>
+            <CardTitle>Детали опроса</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Input
-              label="So'rovnoma nomi"
-              placeholder="Masalan: 2025-yilning eng yaxshi frameworki"
+              label="Название опроса"
+              placeholder="Например: Лучший фреймворк 2025 года"
               error={errors.title?.message}
               {...register('title')}
             />
             <Textarea
-              label="Tavsif"
-              placeholder="Bu so'rovnoma nima haqida ekanini yozing..."
+              label="Описание"
+              placeholder="Опишите, о чем этот опрос..."
               rows={3}
               error={errors.description?.message}
               {...register('description')}
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Boshlanish sanasi va vaqti"
+                label="Дата и время начала"
                 type="datetime-local"
                 error={errors.startDate?.message}
                 {...register('startDate')}
               />
               <Input
-                label="Tugash sanasi va vaqti"
+                label="Дата и время окончания"
                 type="datetime-local"
                 error={errors.endDate?.message}
                 {...register('endDate')}
@@ -168,12 +168,12 @@ export default function PollFormPage() {
           </CardContent>
         </Card>
 
-        {/* Variantlar faqat yaratishda kiritiladi */}
+        {/* Варианты вводятся только при создании */}
         {!isEdit && (
           <Card className="animate-fade-in-up animate-delay-100">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Ovoz variantlari</CardTitle>
+                <CardTitle>Варианты ответа</CardTitle>
                 <span
                   className="text-xs font-medium px-2 py-0.5 rounded-full"
                   style={{
@@ -196,7 +196,7 @@ export default function PollFormPage() {
                   </div>
                   <div className="flex-1">
                     <Input
-                      placeholder={`Variant ${i + 1}`}
+                      placeholder={`Вариант ${i + 1}`}
                       value={opt}
                       onChange={e => updateOption(i, e.target.value)}
                     />
@@ -209,7 +209,7 @@ export default function PollFormPage() {
                     onClick={() => removeOption(i)}
                     disabled={options.length <= 2}
                     style={{ color: options.length <= 2 ? 'var(--muted-foreground)' : '#ef4444' }}
-                    title="Variantni olib tashlash"
+                    title="Удалить вариант"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -218,7 +218,7 @@ export default function PollFormPage() {
 
               {validOptions.length < 2 && (
                 <p className="text-xs" style={{ color: '#ef4444' }}>
-                  Kamida 2 ta to'g'ri variant kerak
+                  Нужно как минимум 2 корректных варианта
                 </p>
               )}
 
@@ -231,9 +231,9 @@ export default function PollFormPage() {
                 className="w-full gap-2 mt-1"
               >
                 <Plus className="w-4 h-4" />
-                Variant qo'shish
+                Добавить вариант
                 {options.length >= 8 && (
-                  <span style={{ color: 'var(--muted-foreground)' }}>(maks. 8)</span>
+                  <span style={{ color: 'var(--muted-foreground)' }}>(макс. 8)</span>
                 )}
               </Button>
             </CardContent>
@@ -248,7 +248,7 @@ export default function PollFormPage() {
             className="flex-1"
             onClick={() => navigate(-1)}
           >
-            Bekor qilish
+            Отмена
           </Button>
           <Button
             type="submit"
@@ -256,7 +256,7 @@ export default function PollFormPage() {
             loading={isPending}
             disabled={!isEdit && validOptions.length < 2}
           >
-            {isEdit ? "O'zgarishlarni saqlash" : "So'rovnoma yaratish"}
+            {isEdit ? "Сохранить изменения" : "Создать опрос"}
           </Button>
         </div>
       </form>

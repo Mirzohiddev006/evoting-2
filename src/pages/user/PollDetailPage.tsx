@@ -42,11 +42,11 @@ export default function PollDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['results', pollId] })
       queryClient.invalidateQueries({ queryKey: ['poll', pollId] })
-      toast.success('Ovozingiz qabul qilindi!')
+      toast.success('Ваш голос принят!')
       setSelected(null)
     },
     onError: (err: unknown) => {
-      toast.error(getErrorMessage(err, 'Ovoz berish amalga oshmadi'))
+      toast.error(getErrorMessage(err, 'Не удалось проголосовать'))
     },
   })
 
@@ -62,8 +62,8 @@ export default function PollDetailPage() {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center">
         <AlertCircle className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--muted-foreground)' }} />
-        <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>So'rovnoma topilmadi</h2>
-        <Button onClick={() => navigate('/dashboard')}>Bosh sahifaga qaytish</Button>
+        <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--foreground)' }}>Опрос не найден</h2>
+        <Button onClick={() => navigate('/dashboard')}>Вернуться на главную</Button>
       </div>
     )
   }
@@ -71,7 +71,7 @@ export default function PollDetailPage() {
   const totalVotes = results?.total_votes ?? 0
   const isActive   = poll.status === 'active'
   const isClosed   = poll.status === 'closed'
-  // Natijalar mavjud bo'lsa ko'rsatiladi; ovoz berish faqat faol holatda mumkin.
+  // Результаты отображаются, если они доступны; голосование возможно только в активном состоянии.
   const canVote    = isActive
   const ss         = STATUS_STYLE[poll.status] ?? STATUS_STYLE.closed
 
@@ -86,7 +86,7 @@ export default function PollDetailPage() {
         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--muted-foreground)' }}
       >
         <ArrowLeft className="w-4 h-4" />
-        Ortga
+        Назад
       </button>
 
       {/* Header */}
@@ -120,7 +120,7 @@ export default function PollDetailPage() {
           </span>
           <span className="flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5" />
-            {formatCount(totalVotes, 'ovoz')}
+            {formatCount(totalVotes, 'голосов')}
           </span>
         </div>
       </div>
@@ -137,10 +137,10 @@ export default function PollDetailPage() {
           <BarChart2 className="w-4 h-4 shrink-0" style={{ color: '#f59e0b' }} />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-              Bu so'rovnoma yopilgan
+              Этот опрос завершен
             </p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-              Yakuniy natijalar quyida ko'rsatilgan
+              Окончательные результаты показаны ниже
             </p>
           </div>
           <Link
@@ -148,7 +148,7 @@ export default function PollDetailPage() {
             className="text-xs font-semibold shrink-0"
             style={{ color: 'var(--primary)' }}
           >
-            To'liq natijalar
+            Полные результаты
           </Link>
         </div>
       )}
@@ -164,10 +164,10 @@ export default function PollDetailPage() {
           <Lock className="w-4 h-4 shrink-0" style={{ color: '#f59e0b' }} />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-              Ovoz berish mavjud emas
+              Голосование недоступно
             </p>
             <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-              Bu so'rovnoma hozir ovoz qabul qilmayapti
+              Этот опрос в данный момент не принимает голоса
             </p>
           </div>
         </div>
@@ -270,10 +270,10 @@ export default function PollDetailPage() {
             loading={isPending}
             onClick={() => castVote()}
           >
-            {selected ? 'Ovozimni yuborish' : 'Yuqoridan variant tanlang'}
+            {selected ? 'Проголосовать' : 'Выберите вариант выше'}
           </Button>
           <p className="text-center text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-            Ovozingiz yakuniy, uni keyin o'zgartirib bo'lmaydi
+            Ваш голос окончателен, его нельзя будет изменить позже
           </p>
         </div>
       )}
@@ -283,7 +283,7 @@ export default function PollDetailPage() {
           <Link to={`/results/${poll.id}`}>
             <Button variant="outline" className="w-full gap-2">
               <BarChart2 className="w-4 h-4" />
-              To'liq natijalar va diagrammalar
+              Полные результаты и графики
             </Button>
           </Link>
         </div>

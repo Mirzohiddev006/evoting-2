@@ -2,10 +2,13 @@ import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
-import { Navbar } from '@/components/shared/Navbar'
+import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/shared/AppSidebar'
 import { ProtectedRoute, AdminRoute, GuestRoute } from '@/components/shared/RouteGuards'
 import { useThemeStore } from '@/store/themeStore'
-import { Spinner } from '@/components/ui'
+import { useAuthStore } from '@/store/authStore'
+import { Spinner, Button } from '@/components/ui'
+import { Sun, Moon } from 'lucide-react'
 
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'))
 const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'))
@@ -31,14 +34,59 @@ function PageLoader() {
   )
 }
 
+function Header() {
+  const { theme, toggleTheme } = useThemeStore()
+  const { user } = useAuthStore()
+
+  return (
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-sm md:px-6">
+      <div className="flex items-center gap-4">
+        <SidebarTrigger />
+        <div className="h-4 w-px bg-border hidden md:block" />
+        <h1 className="text-sm font-semibold text-foreground hidden md:block">
+          Система электронного голосования
+        </h1>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          className="h-9 w-9 text-muted-foreground hover:text-foreground"
+        >
+          {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+        </Button>
+
+        {user && (
+          <div className="flex items-center gap-3 pl-2 border-l border-border">
+            <div className="flex flex-col items-end hidden sm:flex">
+              <span className="text-xs font-semibold text-foreground leading-none">{user.name}</span>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">{user.role}</span>
+            </div>
+            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-[11px] font-bold text-primary-foreground">
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
+
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
-      <main className="flex-1">
-        <Suspense fallback={<PageLoader />}>{children}</Suspense>
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <AppSidebar />
+        <SidebarInset>
+          <Header />
+          <main className="flex-1 p-4 md:p-6 lg:p-8">
+            <Suspense fallback={<PageLoader />}>{children}</Suspense>
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   )
 }
 

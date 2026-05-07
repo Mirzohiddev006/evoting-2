@@ -56,11 +56,11 @@ export function PollCard({ poll, showResults }: PollCardProps) {
             </span>
             <span className="flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 shrink-0" />
-              {totalVotes === 1 ? '1 голос' : `${totalVotes} голосов`}
+              {totalVotes === 1 ? '1 голос' : totalVotes % 10 === 1 && totalVotes % 100 !== 11 ? `${totalVotes} голос` : (totalVotes % 10 >= 2 && totalVotes % 10 <= 4 && (totalVotes % 100 < 10 || totalVotes % 100 >= 20)) ? `${totalVotes} голоса` : `${totalVotes} голосов`}
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 shrink-0" />
-              {formatCount((poll.options ?? []).length, 'вариант')}
+              {poll.options?.length === 1 ? '1 вариант' : (poll.options?.length ?? 0) % 10 === 1 && (poll.options?.length ?? 0) % 100 !== 11 ? `${poll.options?.length} вариант` : ((poll.options?.length ?? 0) % 10 >= 2 && (poll.options?.length ?? 0) % 10 <= 4 && ((poll.options?.length ?? 0) % 100 < 10 || (poll.options?.length ?? 0) % 100 >= 20)) ? `${poll.options?.length} варианта` : `${poll.options?.length ?? 0} вариантов`}
             </span>
           </div>
         </CardContent>

@@ -16,7 +16,7 @@ export default function ProfilePage() {
   const [editName, setEditName] = useState(user?.name ?? '')
   const [editEmail, setEditEmail] = useState(user?.email ?? '')
 
-  // Profil ma'lumotlarini API'dan yangilab olamiz.
+  // Получаем данные профиля из API
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: () => usersApi.getMe(),
@@ -31,10 +31,10 @@ export default function ProfilePage() {
       updateUser(updated)
       queryClient.invalidateQueries({ queryKey: ['profile'] })
       setEditing(false)
-      toast.success('Profil yangilandi!')
+      toast.success('Профиль обновлен!')
     },
     onError: (err: unknown) => {
-      toast.error(getErrorMessage(err, 'Profilni yangilab bo\'lmadi'))
+      toast.error(getErrorMessage(err, 'Не удалось обновить профиль'))
     },
   })
 
@@ -43,10 +43,10 @@ export default function ProfilePage() {
     onSuccess: (updated) => {
       updateUser(updated)
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-      toast.success('Avatar yuklandi!')
+      toast.success('Аватар загружен!')
     },
     onError: (err: unknown) => {
-      toast.error(getErrorMessage(err, 'Avatarni yuklab bo\'lmadi'))
+      toast.error(getErrorMessage(err, 'Не удалось загрузить аватар'))
     },
   })
 
@@ -58,11 +58,11 @@ export default function ProfilePage() {
   const getRoleBadge = (role: string) => {
     switch (role) {
       case 'superuser':
-        return { label: 'Superadmin', style: { background: 'rgba(239,68,68,0.10)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.20)' } }
+        return { label: 'Суперадмин', style: { background: 'rgba(239,68,68,0.10)', color: '#ef4444', borderColor: 'rgba(239,68,68,0.20)' } }
       case 'admin':
-        return { label: 'Admin', style: { background: 'rgba(168,85,247,0.10)', color: '#a855f7', borderColor: 'rgba(168,85,247,0.20)' } }
+        return { label: 'Админ', style: { background: 'rgba(168,85,247,0.10)', color: '#a855f7', borderColor: 'rgba(168,85,247,0.20)' } }
       default:
-        return { label: 'A\'zo', style: { background: 'rgba(59,130,246,0.10)', color: '#3b82f6', borderColor: 'rgba(59,130,246,0.20)' } }
+        return { label: 'Участник', style: { background: 'rgba(59,130,246,0.10)', color: '#3b82f6', borderColor: 'rgba(59,130,246,0.20)' } }
     }
   }
 
@@ -74,7 +74,7 @@ export default function ProfilePage() {
         className="text-xl font-bold mb-6 animate-fade-in-up"
         style={{ color: 'var(--foreground)' }}
       >
-        Mening profilim
+        Мой профиль
       </h1>
 
       {profileLoading ? (
@@ -131,7 +131,7 @@ export default function ProfilePage() {
                 {editing ? (
                   <div className="space-y-3">
                     <Input
-                      label="Ism"
+                      label="Имя"
                       value={editName}
                       onChange={e => setEditName(e.target.value)}
                     />
@@ -144,10 +144,10 @@ export default function ProfilePage() {
                     <div className="flex gap-2">
                       <Button size="sm" loading={saving} onClick={() => saveProfile()} className="gap-1.5">
                         <Save className="w-3.5 h-3.5" />
-                        Saqlash
+                        Сохранить
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => setEditing(false)}>
-                        Bekor qilish
+                        Отмена
                       </Button>
                     </div>
                   </div>
@@ -170,7 +170,7 @@ export default function ProfilePage() {
                         style={{ color: 'var(--muted-foreground)' }}
                       >
                         <Calendar className="w-3.5 h-3.5 shrink-0" />
-                        Qo'shilgan sana: {displayUser?.created_at ? formatDate(displayUser.created_at) : '-'}
+                        Дата регистрации: {displayUser?.created_at ? formatDate(displayUser.created_at) : '-'}
                       </span>
                     </div>
 
@@ -193,7 +193,7 @@ export default function ProfilePage() {
                         setEditing(true)
                       }}
                     >
-                      Profilni tahrirlash
+                      Редактировать профиль
                     </Button>
                   </>
                 )}
@@ -208,7 +208,7 @@ export default function ProfilePage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Vote className="w-4.5 h-4.5" style={{ color: 'var(--primary)' }} />
-            Hisob ma'lumotlari
+            Данные учетной записи
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
@@ -218,10 +218,10 @@ export default function ProfilePage() {
           >
             <CheckCircle2 className="w-9 h-9" style={{ color: '#10b981' }} />
             <p className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-              Hisobingiz faol
+              Ваша учетная запись активна
             </p>
             <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-              Rol: {getRoleLabel(displayUser?.role ?? 'user')} | ID: {displayUser?.id}
+              Роль: {getRoleLabel(displayUser?.role ?? 'user')} | ID: {displayUser?.id}
             </p>
           </div>
         </CardContent>

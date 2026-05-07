@@ -44,15 +44,15 @@ export default function ResultsPage() {
     doc.setFontSize(18)
     doc.text(poll.title, 20, 20)
     doc.setFontSize(11)
-    doc.text(`Jami ovozlar: ${results.total_votes}`, 20, 35)
-    doc.text(`Yaratilgan vaqt: ${new Date().toLocaleString('uz-UZ')}`, 20, 45)
+    doc.text(`Всего голосов: ${results.total_votes}`, 20, 35)
+    doc.text(`Дата создания: ${new Date().toLocaleString('ru-RU')}`, 20, 45)
     let y = 60
     results.results.forEach(r => {
-      doc.text(`${r.text}: ${r.vote_count} ta ovoz (${r.percentage}%)`, 20, y)
+      doc.text(`${r.text}: ${r.vote_count} голосов (${r.percentage}%)`, 20, y)
       y += 10
     })
-    doc.save(`${poll.title.replace(/\s+/g, '_')}_natijalar.pdf`)
-    toast.success('PDF eksport qilindi!')
+    doc.save(`${poll.title.replace(/\s+/g, '_')}_results.pdf`)
+    toast.success('PDF экспортирован!')
   }
 
   if (isLoading) {
@@ -80,14 +80,14 @@ export default function ResultsPage() {
         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--muted-foreground)' }}
       >
         <ArrowLeft className="w-4 h-4" />
-        Ortga
+        Назад
       </button>
 
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-6 flex-wrap animate-fade-in-up">
         <div>
           <h1 className="text-xl font-bold" style={{ color: 'var(--foreground)' }}>
-            {poll?.title ?? 'So\'rovnoma natijalari'}
+            {poll?.title ?? 'Результаты опроса'}
           </h1>
           <div className="flex items-center gap-2 mt-1">
             <span
@@ -95,7 +95,7 @@ export default function ResultsPage() {
               style={{ background: '#10b981' }}
             />
             <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-              Jonli natijalar, har 10 soniyada yangilanadi
+              Живые результаты, обновляются каждые 10 секунд
             </p>
           </div>
         </div>
@@ -108,11 +108,11 @@ export default function ResultsPage() {
             className="gap-2"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
-            Yangilash
+            Обновить
           </Button>
           <Button size="sm" onClick={exportPDF} className="gap-2">
             <Download className="w-3.5 h-3.5" />
-            PDF eksport qilish
+            Экспорт в PDF
           </Button>
         </div>
       </div>
@@ -124,20 +124,20 @@ export default function ResultsPage() {
             icon: <Users className="w-4.5 h-4.5" style={{ color: 'var(--primary)' }} />,
             iconBg: 'var(--primary)/10',
             value: results.total_votes.toLocaleString(),
-            label: 'Jami ovozlar',
+            label: 'Всего голосов',
           },
           {
             icon: <Trophy className="w-4.5 h-4.5" style={{ color: '#10b981' }} />,
             iconBg: 'rgba(16,185,129,0.10)',
             value: winner?.text ?? '-',
-            label: 'Yetakchi variant',
+            label: 'Лидирующий вариант',
             truncate: true,
           },
           {
             icon: <BarChart2 className="w-4.5 h-4.5" style={{ color: '#a855f7' }} />,
             iconBg: 'rgba(168,85,247,0.10)',
             value: `${winner?.percentage ?? 0}%`,
-            label: 'Eng katta ulush',
+            label: 'Наибольшая доля',
           },
         ].map((item, i) => (
           <Card key={i}>
@@ -169,7 +169,7 @@ export default function ResultsPage() {
       {/* Progress bars */}
       <Card className="mb-5 animate-fade-in-up animate-delay-200">
         <CardHeader>
-          <CardTitle>Ovozlar taqsimoti</CardTitle>
+          <CardTitle>Распределение голосов</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 pt-0">
           {sorted.map((r, i) => (
@@ -213,10 +213,10 @@ export default function ResultsPage() {
 
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 animate-fade-in-up animate-delay-300">
-        {/* Doira diagramma */}
+        {/* Круговая диаграмма */}
         <Card>
           <CardHeader>
-            <CardTitle>Doira diagramma</CardTitle>
+            <CardTitle>Круговая диаграмма</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
             {results.total_votes > 0 ? (
@@ -250,16 +250,16 @@ export default function ResultsPage() {
                 style={{ color: 'var(--muted-foreground)' }}
               >
                 <BarChart2 className="w-8 h-8 opacity-30" />
-                <p className="text-sm">Hozircha ovoz yo'q</p>
+                <p className="text-sm">Голосов пока нет</p>
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Ustunli diagramma */}
+        {/* Столбчатая диаграмма */}
         <Card>
           <CardHeader>
-            <CardTitle>Ustunli diagramma</CardTitle>
+            <CardTitle>Столбчатая диаграмма</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
             <ResponsiveContainer width="100%" height={240}>
@@ -281,7 +281,7 @@ export default function ResultsPage() {
                   axisLine={false}
                 />
                 <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: 'var(--accent)' }} />
-                <Bar dataKey="votes" name="Ovozlar" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="votes" name="Голоса" radius={[6, 6, 0, 0]}>
                   {barData.map((_, i) => (
                     <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                   ))}
