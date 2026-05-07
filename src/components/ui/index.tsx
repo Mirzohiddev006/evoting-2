@@ -5,42 +5,40 @@ import { cva, type VariantProps } from 'class-variance-authority'
 // ─── Button ──────────────────────────────────────────────────────
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl',
-    'text-sm font-semibold transition-all duration-200 cursor-pointer',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]',
-    'disabled:pointer-events-none disabled:opacity-40',
-    'active:scale-[0.97]',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md',
+    'text-sm font-medium transition-colors duration-150 cursor-pointer',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--background)',
+    'disabled:pointer-events-none disabled:opacity-50',
   ].join(' '),
   {
     variants: {
       variant: {
         default: [
-          'bg-[var(--primary)] text-[var(--primary-foreground)]',
-          'hover:opacity-90 hover:shadow-md',
-          'shadow-sm',
+          'bg-(--primary) text-(--primary-foreground)',
+          'hover:opacity-90 shadow-sm',
         ].join(' '),
         destructive: [
-          'bg-[var(--destructive)] text-[var(--destructive-foreground)]',
-          'hover:opacity-90',
+          'bg-(--destructive) text-(--destructive-foreground)',
+          'hover:opacity-90 shadow-sm',
         ].join(' '),
         outline: [
-          'border border-[var(--border-strong)] bg-transparent text-[var(--foreground)]',
-          'hover:bg-[var(--accent)] hover:border-[var(--border-strong)]',
+          'border border-(--border) bg-(--background) text-(--foreground)',
+          'hover:bg-(--accent) hover:text-(--accent-foreground)',
         ].join(' '),
         secondary: [
-          'bg-[var(--secondary)] text-[var(--secondary-foreground)]',
-          'hover:bg-[var(--accent)]',
+          'bg-(--secondary) text-(--secondary-foreground)',
+          'hover:bg-(--secondary)/80',
         ].join(' '),
         ghost: [
-          'bg-transparent text-[var(--foreground)]',
-          'hover:bg-[var(--accent)]',
+          'bg-transparent text-(--foreground)',
+          'hover:bg-(--accent) hover:text-(--accent-foreground)',
         ].join(' '),
-        link: 'text-[var(--primary)] underline-offset-4 hover:underline bg-transparent',
+        link: 'text-(--foreground) underline-offset-4 hover:underline bg-transparent',
       },
       size: {
-        default: 'h-10 px-4 py-2',
-        sm:      'h-8 rounded-lg px-3 text-xs',
-        lg:      'h-11 rounded-xl px-6 text-[0.9375rem]',
+        default: 'h-9 px-4 py-2',
+        sm:      'h-8 rounded-md px-3 text-xs',
+        lg:      'h-10 rounded-md px-8',
         icon:    'h-9 w-9',
       },
     },
@@ -88,13 +86,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-[var(--foreground)]">
+          <label htmlFor={inputId} className="text-sm font-medium text-(--foreground)">
             {label}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] pointer-events-none">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-(--muted-foreground) pointer-events-none">
               {leftIcon}
             </div>
           )}
@@ -102,23 +100,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'flex h-10 w-full rounded-xl px-3 py-2 text-sm',
-              'bg-[var(--background)] text-[var(--foreground)]',
-              'border border-[var(--border-strong)]',
-              'placeholder:text-[var(--muted-foreground)]',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:border-transparent',
-              'disabled:cursor-not-allowed disabled:opacity-40 disabled:bg-[var(--muted)]',
-              'transition-all duration-150',
-              'autofill:bg-[var(--background)]',
+              'flex h-9 w-full rounded-md px-3 py-2 text-sm',
+              'bg-transparent text-(--foreground)',
+              'border border-(--input)',
+              'placeholder:text-(--muted-foreground)',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:border-transparent',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              'transition-colors duration-150',
               leftIcon && 'pl-10',
-              error && 'border-[var(--destructive)] focus-visible:ring-[var(--destructive)]/40',
+              error && 'border-(--destructive) focus-visible:ring-(--destructive)/40',
               className
             )}
             {...props}
           />
         </div>
-        {error && <p className="text-xs text-[var(--destructive)] flex items-center gap-1">⚠ {error}</p>}
-        {hint && !error && <p className="text-xs text-[var(--muted-foreground)]">{hint}</p>}
+        {error && <p className="text-xs text-(--destructive)">⚠ {error}</p>}
+        {hint && !error && <p className="text-xs text-(--muted-foreground)">{hint}</p>}
       </div>
     )
   }
@@ -137,7 +134,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-[var(--foreground)]">
+          <label htmlFor={inputId} className="text-sm font-medium text-(--foreground)">
             {label}
           </label>
         )}
@@ -145,20 +142,20 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            'flex min-h-[90px] w-full rounded-xl px-3 py-2.5 text-sm',
-            'bg-[var(--background)] text-[var(--foreground)]',
-            'border border-[var(--border-strong)]',
-            'placeholder:text-[var(--muted-foreground)]',
+            'flex min-h-[80px] w-full rounded-md px-3 py-2 text-sm',
+            'bg-transparent text-(--foreground)',
+            'border border-(--input)',
+            'placeholder:text-(--muted-foreground)',
             'resize-none',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:border-transparent',
-            'disabled:cursor-not-allowed disabled:opacity-40',
-            'transition-all duration-150',
-            error && 'border-[var(--destructive)]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:border-transparent',
+            'disabled:cursor-not-allowed disabled:opacity-50',
+            'transition-colors duration-150',
+            error && 'border-(--destructive)',
             className
           )}
           {...props}
         />
-        {error && <p className="text-xs text-[var(--destructive)]">⚠ {error}</p>}
+        {error && <p className="text-xs text-(--destructive)">⚠ {error}</p>}
       </div>
     )
   }
@@ -167,17 +164,17 @@ Textarea.displayName = 'Textarea'
 
 // ─── Badge ───────────────────────────────────────────────────────
 const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors select-none',
+  'inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-semibold transition-colors select-none',
   {
     variants: {
       variant: {
-        default:     'bg-[var(--primary)]/12 text-[var(--primary)] border-[var(--primary)]/20',
-        secondary:   'bg-[var(--secondary)] text-[var(--secondary-foreground)] border-[var(--border)]',
-        destructive: 'bg-[var(--destructive)]/12 text-[var(--destructive)] border-[var(--destructive)]/25',
-        outline:     'border-[var(--border-strong)] text-[var(--foreground)] bg-transparent',
-        success:     'bg-emerald-500/12 text-emerald-500 border-emerald-500/25 dark:text-emerald-400',
-        warning:     'bg-amber-500/12 text-amber-600 border-amber-500/25 dark:text-amber-400',
-        muted:       'bg-[var(--muted)] text-[var(--muted-foreground)] border-[var(--border)]',
+        default:     'bg-(--primary) text-(--primary-foreground) border-transparent',
+        secondary:   'bg-(--secondary) text-(--secondary-foreground) border-transparent',
+        destructive: 'bg-(--destructive) text-(--destructive-foreground) border-transparent',
+        outline:     'border-(--border) text-(--foreground) bg-transparent',
+        success:     'bg-emerald-500/10 text-emerald-700 border-emerald-200 dark:text-emerald-400 dark:border-emerald-900',
+        warning:     'bg-amber-500/10 text-amber-700 border-amber-200 dark:text-amber-400 dark:border-amber-900',
+        muted:       'bg-(--muted) text-(--muted-foreground) border-transparent',
       },
     },
     defaultVariants: { variant: 'default' },
@@ -198,8 +195,7 @@ export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
     <div
       ref={ref}
       className={cn(
-        'rounded-2xl border border-[var(--border)] bg-[var(--card)] text-[var(--card-foreground)]',
-        'shadow-[var(--shadow-sm)]',
+        'rounded-lg border border-(--border) bg-(--card) text-(--card-foreground) shadow-sm',
         className
       )}
       {...props}
@@ -209,19 +205,19 @@ export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
 Card.displayName = 'Card'
 
 export const CardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-1 p-5 pb-0', className)} {...props} />
+  <div className={cn('flex flex-col space-y-1 p-6 pb-0', className)} {...props} />
 )
 export const CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h3 className={cn('text-base font-semibold leading-none tracking-tight text-[var(--foreground)]', className)} {...props} />
+  <h3 className={cn('text-base font-semibold leading-none tracking-tight text-(--foreground)', className)} {...props} />
 )
 export const CardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-  <p className={cn('text-sm text-[var(--muted-foreground)] mt-1', className)} {...props} />
+  <p className={cn('text-sm text-(--muted-foreground) mt-1', className)} {...props} />
 )
 export const CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('p-5 pt-4', className)} {...props} />
+  <div className={cn('p-6 pt-4', className)} {...props} />
 )
 export const CardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex items-center p-5 pt-0', className)} {...props} />
+  <div className={cn('flex items-center p-6 pt-0', className)} {...props} />
 )
 
 // ─── Skeleton ────────────────────────────────────────────────────
@@ -232,12 +228,12 @@ export const Skeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivEl
 // ─── Spinner ─────────────────────────────────────────────────────
 export const Spinner = ({ className }: { className?: string }) => (
   <svg
-    className={cn('animate-spin h-5 w-5 text-[var(--primary)]', className)}
+    className={cn('animate-spin h-5 w-5 text-(--muted-foreground)', className)}
     fill="none"
     viewBox="0 0 24 24"
   >
-    <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3.5" />
-    <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
   </svg>
 )
 
@@ -251,14 +247,14 @@ export const EmptyState = ({
   action?: React.ReactNode
   className?: string
 }) => (
-  <div className={cn("flex flex-col items-center justify-center py-20 text-center gap-4", className)}>
+  <div className={cn("flex flex-col items-center justify-center py-20 text-center gap-3", className)}>
     {icon && (
-      <div className="text-[var(--muted-foreground)] opacity-30">{icon}</div>
+      <div className="text-(--muted-foreground) opacity-40 mb-1">{icon}</div>
     )}
     <div>
-      <p className="font-semibold text-[var(--foreground)] text-base">{title}</p>
+      <p className="font-semibold text-(--foreground) text-sm">{title}</p>
       {description && (
-        <p className="text-sm text-[var(--muted-foreground)] mt-1.5 max-w-xs">{description}</p>
+        <p className="text-sm text-(--muted-foreground) mt-1 max-w-xs">{description}</p>
       )}
     </div>
     {action}
@@ -275,9 +271,9 @@ export const ProgressBar = ({
   className?: string
   color?: string
 }) => (
-  <div className={cn('h-2 w-full rounded-full bg-[var(--secondary)] overflow-hidden', className)}>
+  <div className={cn('h-2 w-full rounded-full bg-(--secondary) overflow-hidden', className)}>
     <div
-      className="h-full rounded-full transition-all duration-700 ease-out"
+      className="h-full rounded-full transition-all duration-500 ease-out"
       style={{
         width: `${Math.min(100, Math.max(0, value))}%`,
         background: color ?? 'var(--primary)',
@@ -317,30 +313,29 @@ export const Modal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-[2px] animate-fade-in"
+        className="absolute inset-0 bg-black/50 animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
       <div
         className={cn(
-          'relative w-full bg-[var(--card)] border border-[var(--border)] rounded-2xl',
-          'shadow-[0_24px_60px_-8px_rgb(0,0,0,0.5)]',
+          'relative w-full bg-(--card) border border-(--border) rounded-lg shadow-lg',
           'animate-fade-in-up',
           sizes[size]
         )}
       >
         {title && (
-          <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-[var(--border)]">
+          <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-(--border)">
             <div>
-              <h2 className="text-base font-semibold text-[var(--foreground)]">{title}</h2>
+              <h2 className="text-base font-semibold text-(--foreground)">{title}</h2>
               {description && (
-                <p className="text-sm text-[var(--muted-foreground)] mt-0.5">{description}</p>
+                <p className="text-sm text-(--muted-foreground) mt-1">{description}</p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="ml-4 shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--accent)] transition-all"
-              aria-label="Yopish"
+              className="ml-4 shrink-0 w-8 h-8 rounded-md flex items-center justify-center text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--accent) transition-colors"
+              aria-label="Close"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -348,7 +343,7 @@ export const Modal = ({
             </button>
           </div>
         )}
-        <div className="p-5">{children}</div>
+        <div className="p-6">{children}</div>
       </div>
     </div>
   )
@@ -367,7 +362,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
-          <label htmlFor={selectId} className="text-sm font-medium text-[var(--foreground)]">
+          <label htmlFor={selectId} className="text-sm font-medium text-(--foreground)">
             {label}
           </label>
         )}
@@ -375,13 +370,13 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            'flex h-10 w-full rounded-xl px-3 py-2 text-sm appearance-none',
-            'bg-[var(--background)] text-[var(--foreground)]',
-            'border border-[var(--border-strong)]',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:border-transparent',
-            'disabled:cursor-not-allowed disabled:opacity-40',
-            'transition-all duration-150 cursor-pointer',
-            error && 'border-[var(--destructive)]',
+            'flex h-9 w-full rounded-md px-3 py-2 text-sm appearance-none',
+            'bg-transparent text-(--foreground)',
+            'border border-(--input)',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--ring) focus-visible:border-transparent',
+            'disabled:cursor-not-allowed disabled:opacity-50',
+            'transition-colors duration-150 cursor-pointer',
+            error && 'border-(--destructive)',
             className
           )}
           style={{
@@ -396,7 +391,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
-        {error && <p className="text-xs text-[var(--destructive)]">⚠ {error}</p>}
+        {error && <p className="text-xs text-(--destructive)">⚠ {error}</p>}
       </div>
     )
   }
@@ -405,5 +400,5 @@ Select.displayName = 'Select'
 
 // ─── Divider ─────────────────────────────────────────────────────
 export const Divider = ({ className }: { className?: string }) => (
-  <hr className={cn('border-none h-px bg-[var(--border)] my-1', className)} />
+  <hr className={cn('border-none h-px bg-(--border) my-1', className)} />
 )

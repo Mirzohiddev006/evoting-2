@@ -34,27 +34,18 @@ export function Navbar() {
       : location.pathname === to || location.pathname.startsWith(to + '/')
 
   return (
-    <header
-      className="sticky top-0 z-40 w-full transition-all duration-200"
-      style={{
-        borderBottom: '1px solid var(--border)',
-        background: 'color-mix(in srgb, var(--background) 82%, transparent)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[58px] flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 w-full border-b border-(--border) bg-(--background)/95 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link
           to={isAuthenticated ? '/dashboard' : '/'}
-          className="flex items-center gap-2.5 group shrink-0"
+          className="flex items-center gap-2 group shrink-0"
         >
-          <div className="nav-logo-bg w-8 h-8 rounded-[10px] flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
-            <Vote className="w-4 h-4 text-white" />
+          <div className="nav-logo-bg w-7 h-7 rounded-md flex items-center justify-center">
+            <Vote className="w-3.5 h-3.5 text-(--primary-foreground)" />
           </div>
-          <span className="font-extrabold text-[15px] tracking-tight">
-            <span style={{ color: 'var(--foreground)' }}>E</span>
-            <span className="text-gradient">Vote</span>
+          <span className="font-bold text-sm tracking-tight text-(--foreground)">
+            EVote
           </span>
         </Link>
 
@@ -65,10 +56,10 @@ export function Navbar() {
               key={link.to}
               to={link.to}
               className={cn(
-                'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm font-medium transition-all duration-150',
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors duration-150',
                 isActive(link.to)
-                  ? 'text-[var(--primary)] bg-[var(--primary)]/10 shadow-sm'
-                  : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--accent)] hover:shadow-sm'
+                  ? 'bg-(--secondary) text-(--foreground)'
+                  : 'text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--accent)'
               )}
             >
               {link.icon}
@@ -83,54 +74,24 @@ export function Navbar() {
           <button
             onClick={toggleTheme}
             aria-label="Переключить тему"
-            className="h-8 w-8 rounded-xl flex items-center justify-center transition-all duration-150"
-            style={{
-              border: '1px solid var(--border)',
-              color: 'var(--muted-foreground)',
-              background: 'var(--card)',
-              boxShadow: 'var(--shadow-sm)',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'var(--accent)'
-              e.currentTarget.style.color = 'var(--foreground)'
-              e.currentTarget.style.borderColor = 'var(--border-strong)'
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.color = 'var(--muted-foreground)'
-              e.currentTarget.style.borderColor = 'var(--border)'
-            }}
+            className="h-8 w-8 rounded-md border border-(--border) bg-(--background) flex items-center justify-center text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--accent) transition-colors duration-150"
           >
-            {theme === 'dark'
-              ? <Sun className="w-4 h-4" />
-              : <Moon className="w-4 h-4" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
 
           {isAuthenticated ? (
             <>
               {/* User badge */}
-              <div
-                className="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-xl cursor-default"
-                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
-              >
-                <div
-                  className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold text-white"
-                  style={{ background: 'linear-gradient(135deg, hsl(252 82% 62%), hsl(220 80% 58%))' }}
-                >
+              <div className="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-md border border-(--border) bg-(--secondary)">
+                <div className="w-5 h-5 rounded-full bg-(--foreground) flex items-center justify-center shrink-0 text-[10px] font-bold text-(--background)">
                   {user?.name.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-xs font-semibold text-[var(--foreground)] max-w-[80px] truncate">
+                <span className="text-xs font-medium text-(--foreground) max-w-20 truncate">
                   {user?.name.split(' ')[0]}
                 </span>
                 {(user?.role === 'admin' || user?.role === 'superuser') && (
-                  <span
-                    className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                    style={{
-                      background: 'hsl(252 82% 62% / 0.12)',
-                      color: 'var(--primary)',
-                      border: '1px solid hsl(252 82% 62% / 0.20)',
-                    }}
-                  >
-                    {user?.role === 'superuser' ? 'Супер' : 'Админ'}
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-sm font-semibold bg-(--foreground) text-(--background)">
+                    {user?.role === 'superuser' ? 'Super' : 'Admin'}
                   </span>
                 )}
               </div>
@@ -138,7 +99,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={handleLogout}
-                className="h-8 w-8 text-[var(--muted-foreground)] hover:text-red-500 hover:bg-red-500/10 rounded-xl"
+                className="h-8 w-8 text-(--muted-foreground) hover:text-red-500 hover:bg-red-500/10"
                 aria-label="Выйти"
               >
                 <LogOut className="w-4 h-4" />
@@ -147,24 +108,13 @@ export function Navbar() {
           ) : (
             <div className="hidden md:flex items-center gap-2">
               <Button variant="ghost" size="sm" onClick={() => navigate('/login')}>Войти</Button>
-              <Button
-                size="sm"
-                onClick={() => navigate('/register')}
-                className="btn-gradient text-white border-0"
-              >
-                Начать
-              </Button>
+              <Button size="sm" onClick={() => navigate('/register')}>Начать</Button>
             </div>
           )}
 
           {/* Mobile menu toggle */}
           <button
-            className="md:hidden h-8 w-8 rounded-xl flex items-center justify-center"
-            style={{
-              border: '1px solid var(--border)',
-              color: 'var(--muted-foreground)',
-              background: 'var(--card)'
-            }}
+            className="md:hidden h-8 w-8 rounded-md border border-(--border) bg-(--background) flex items-center justify-center text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--accent) transition-colors"
             onClick={() => setMobileOpen(v => !v)}
             aria-label="Меню"
           >
@@ -175,45 +125,39 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div
-          className="md:hidden px-4 pb-4 pt-2 flex flex-col gap-1 animate-slide-down"
-          style={{ borderTop: '1px solid var(--border)', background: 'var(--background)' }}
-        >
+        <div className="md:hidden px-4 pb-4 pt-2 flex flex-col gap-1 animate-slide-down border-t border-(--border) bg-(--background)">
           {navLinks.map(link => (
             <Link
               key={link.to}
               to={link.to}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all',
+                'flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium transition-colors',
                 isActive(link.to)
-                  ? 'text-[var(--primary)] bg-[var(--primary)]/10 shadow-sm'
-                  : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--accent)] hover:shadow-sm'
+                  ? 'bg-(--secondary) text-(--foreground)'
+                  : 'text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--accent)'
               )}
             >
               {link.icon}
               {link.label}
             </Link>
           ))}
-          <div className="h-px bg-[var(--border)] my-1.5" />
+          <div className="h-px bg-(--border) my-1.5" />
           {!isAuthenticated ? (
-            <div className="flex gap-3">
-              <Button variant="outline" size="sm" className="flex-1 font-semibold"
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="flex-1"
                 onClick={() => { navigate('/login'); setMobileOpen(false) }}>
                 Войти
               </Button>
-              <Button
-                size="sm"
-                className="flex-1 btn-gradient text-white border-0"
-                onClick={() => { navigate('/register'); setMobileOpen(false) }}
-              >
+              <Button size="sm" className="flex-1"
+                onClick={() => { navigate('/register'); setMobileOpen(false) }}>
                 Начать
               </Button>
             </div>
           ) : (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-all"
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors"
             >
               <LogOut className="w-4 h-4" />
               Выйти
