@@ -105,7 +105,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full gap-2 btn-gradient text-white border-0 h-11 text-[0.9375rem]"
+              className="w-full gap-2 bg-primary text-primary-foreground h-11 text-[0.9375rem]"
               loading={loading}
             >
               Войти
