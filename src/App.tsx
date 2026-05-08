@@ -77,15 +77,13 @@ function Header() {
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <SidebarInset>
-          <Header />
-          <main className="flex-1 p-4 md:p-6 lg:p-8">
-            <Suspense fallback={<PageLoader />}>{children}</Suspense>
-          </main>
-        </SidebarInset>
-      </div>
+      <AppSidebar />
+      <SidebarInset>
+        <Header />
+        <main className="flex-1 p-4 md:p-6 lg:p-8">
+          <Suspense fallback={<PageLoader />}>{children}</Suspense>
+        </main>
+      </SidebarInset>
     </SidebarProvider>
   )
 }

@@ -44,14 +44,19 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="h-16 flex items-center px-6 border-b border-border">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold group-hover:scale-105 transition-transform">
+      <SidebarHeader className="h-16 flex items-center px-4 border-b border-border">
+        <Link to="/" className="flex items-center gap-3 group/logo w-full overflow-hidden">
+          <div className="w-9 h-9 shrink-0 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold group-hover/logo:scale-105 transition-transform shadow-sm">
             E
           </div>
-          <span className="font-bold text-lg tracking-tight group-data-[collapsible=icon]:hidden">
-            EVote
-          </span>
+          <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
+            <span className="font-bold text-base tracking-tight text-foreground">
+              EVote
+            </span>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider leading-none">
+              Система голосования
+            </span>
+          </div>
         </Link>
       </SidebarHeader>
 
@@ -71,7 +76,7 @@ export function AppSidebar() {
                   >
                     <Link to={item.path}>
                       <item.icon className="w-5 h-5" />
-                      <span>{item.title}</span>
+                      <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -96,9 +101,8 @@ export function AppSidebar() {
                     >
                       <Link to={item.path}>
                         <item.icon className="w-5 h-5" />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                        <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
+                      </Link>                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -116,7 +120,7 @@ export function AppSidebar() {
               onClick={logout}
             >
               <LogOut className="w-5 h-5" />
-              <span>Выйти</span>
+              <span className="group-data-[collapsible=icon]:hidden">Выйти</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
