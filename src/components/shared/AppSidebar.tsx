@@ -102,7 +102,8 @@ export function AppSidebar() {
                       <Link to={item.path}>
                         <item.icon className="w-5 h-5" />
                         <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
-                      </Link>                    </SidebarMenuButton>
+                      </Link>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
