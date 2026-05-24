@@ -80,7 +80,7 @@ export default function AdminPollsPage() {
             Создавайте, редактируйте и удаляйте опросы
           </p>
         </div>
-        <Button onClick={() => navigate('/admin/polls/new')}>
+        <Button onClick={() => navigate('/admin/polls/create')}>
           <Plus className="w-4 h-4" />
           Новый опрос
         </Button>
@@ -114,7 +114,7 @@ export default function AdminPollsPage() {
           title="Опросы не найдены"
           description={search || statusFilter !== 'all' ? 'Измените параметры поиска' : 'Пока нет созданных опросов'}
           action={
-            <Button variant="outline" size="sm" onClick={() => navigate('/admin/polls/new')}>
+            <Button variant="outline" size="sm" onClick={() => navigate('/admin/polls/create')}>
               Создать первый опрос
             </Button>
           }
@@ -190,7 +190,7 @@ export default function AdminPollsPage() {
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7 text-(--muted-foreground) hover:text-(--foreground)"
-                            onClick={() => navigate(`/admin/polls/${p.id}/edit`)}
+                            onClick={() => navigate(`/admin/polls/edit/${p.id}`)}
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </Button>
