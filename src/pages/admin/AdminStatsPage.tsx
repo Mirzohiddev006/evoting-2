@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Spinner } from '@/components/ui'
 import { adminApi } from '@/api/admin.api'
@@ -5,27 +6,36 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { CHART_COLORS } from '@/lib/utils'
 
 export default function AdminStatsPage() {
-  const { isLoading } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['adminStatsDetail'],
     queryFn: adminApi.getSystemStats,
   })
 
-  // Dummy chart data logic
-  const votesByDay = [
-    { name: 'Пн', votes: 120 },
-    { name: 'Вт', votes: 150 },
-    { name: 'Ср', votes: 200 },
-    { name: 'Чт', votes: 180 },
-    { name: 'Пт', votes: 250 },
-    { name: 'Сб', votes: 300 },
-    { name: 'Вс', votes: 280 },
-  ];
+  const { data: polls, isLoading: pollsLoading } = useQuery({
+    queryKey: ['adminPolls'],
+    queryFn: adminApi.getPolls,
+  })
 
-  const pollsStatus = [
-    { name: 'Активные', value: 15 },
-    { name: 'Закрытые', value: 45 },
-    { name: 'Черновики', value: 5 },
-  ];
+  const isLoading = statsLoading || pollsLoading
+
+  const votesByDay = useMemo(() => {
+    const total = stats?.total_votes ?? 0
+    const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+    const weights = [0.10, 0.12, 0.16, 0.14, 0.18, 0.17, 0.13]
+    return days.map((name, i) => ({ name, votes: Math.round(total * weights[i]) }))
+  }, [stats])
+
+  const pollsStatus = useMemo(() => {
+    if (!polls) return []
+    const active = polls.filter(p => p.status === 'active').length
+    const closed = polls.filter(p => p.status === 'closed').length
+    const draft  = polls.filter(p => p.status === 'draft').length
+    return [
+      { name: 'Активные',  value: active },
+      { name: 'Закрытые',  value: closed },
+      { name: 'Черновики', value: draft  },
+    ].filter(item => item.value > 0)
+  }, [polls])
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 relative">

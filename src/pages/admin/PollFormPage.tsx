@@ -11,16 +11,36 @@ import { adminApi } from '@/api/admin.api'
 import { getErrorMessage } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
+const MAX_DATE = new Date()
+MAX_DATE.setFullYear(MAX_DATE.getFullYear() + 2)
+
 const schema = z.object({
   title:       z.string().min(5, 'Минимум 5 символов'),
   description: z.string().min(10, 'Минимум 10 символов'),
   startDate:   z.string().min(1, 'Обязательное поле'),
   endDate:     z.string().min(1, 'Обязательное поле'),
-}).refine(d => new Date(d.endDate) > new Date(d.startDate), {
-  message: 'Дата окончания должна быть позже даты начала',
-  path: ['endDate'],
 })
+  .refine(d => new Date(d.endDate) > new Date(d.startDate), {
+    message: 'Дата окончания должна быть позже даты начала',
+    path: ['endDate'],
+  })
+  .refine(d => new Date(d.endDate) <= MAX_DATE, {
+    message: `Дата не может превышать ${MAX_DATE.getFullYear()} год`,
+    path: ['endDate'],
+  })
 type FormData = z.infer<typeof schema>
+
+function getTodayLocal() {
+  const d = new Date()
+  d.setSeconds(0, 0)
+  return d.toISOString().slice(0, 16)
+}
+
+function getMaxDateLocal() {
+  const d = new Date()
+  d.setFullYear(d.getFullYear() + 2)
+  return d.toISOString().slice(0, 16)
+}
 
 export default function PollFormPage() {
   const navigate    = useNavigate()
@@ -29,6 +49,8 @@ export default function PollFormPage() {
   const pollId      = id ? Number(id) : undefined
   const isEdit      = !!pollId
   const [options, setOptions] = useState(['', ''])
+  const minDate = getTodayLocal()
+  const maxDate = getMaxDateLocal()
 
   const { data: existing } = useQuery({
     queryKey: ['poll', pollId],
@@ -155,12 +177,16 @@ export default function PollFormPage() {
               <Input
                 label="Дата и время начала"
                 type="datetime-local"
+                min={isEdit ? undefined : minDate}
+                max={maxDate}
                 error={errors.startDate?.message}
                 {...register('startDate')}
               />
               <Input
                 label="Дата и время окончания"
                 type="datetime-local"
+                min={isEdit ? undefined : minDate}
+                max={maxDate}
                 error={errors.endDate?.message}
                 {...register('endDate')}
               />
